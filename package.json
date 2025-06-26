@@ -41,15 +41,6 @@
     "win": {
       "target": "nsis",
       "icon": "images/wemix-512x512.png"
-    },
-    "mac": {
-      "target": "dmg",
-      "icon": "images/wemix-512x512.png"
-    },
-    "linux": {
-      "target": "AppImage",
-      "icon": "images/wemix-512x512.png",
-      "category": "Utility"
     }
   }
 }
