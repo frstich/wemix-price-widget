@@ -4,12 +4,32 @@
   "description": "A WEMIX price widget built with Electron",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build": "electron-builder"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "wemix",
+    "crypto",
+    "price",
+    "widget"
+  ],
+  "author": "frstich",
   "license": "ISC",
   "devDependencies": {
     "electron": "^29.0.0"
+  },
+  "build": {
+    "appId": "com.frstich.wemixmonitor",
+    "repository": "https://github.com/frstich/wemix-price-widget-electron",
+    "productName": "Wemix Monitor",
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "style.css",
+      "renderer.js",
+      "node_modules/**/*",
+      "package.json"
+    ]
   }
 }
