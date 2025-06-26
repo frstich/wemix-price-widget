@@ -1,212 +1,471 @@
 /* --- THEME VARIABLES --- */
 :root {
-    --widget-width: 320px;
-    --widget-height: 220px; /* Increased height for sparkline */
+  --widget-min-width: 280px;
+  --widget-max-width: 400px;
+  --widget-width: 320px;
+  --widget-min-height: 200px;
+  --widget-max-height: 300px;
+  --widget-height: 220px;
 
-    /* Dark Theme (Default) */
-    --bg-color-dark: rgba(30, 30, 30, 0.6);
-    --border-color-dark: rgba(255, 255, 255, 0.1);
-    --text-color-dark: #fff;
-    --text-color-secondary-dark: #ccc;
-    --shadow-dark: 0 8px 32px rgba(0, 0, 0, 0.2);
+  /* Dark Theme (Default) */
+  --bg-color-dark: rgba(30, 30, 30, 0.85);
+  --border-color-dark: rgba(255, 255, 255, 0.15);
+  --text-color-dark: #fff;
+  --text-color-secondary-dark: #ccc;
+  --shadow-dark: 0 8px 32px rgba(0, 0, 0, 0.3);
 
-    /* Light Theme */
-    --bg-color-light: rgba(255, 255, 255, 0.6);
-    --border-color-light: rgba(0, 0, 0, 0.1);
-    --text-color-light: #333;
-    --text-color-secondary-light: #666;
-    --shadow-light: 0 8px 32px rgba(0, 0, 0, 0.1);
+  /* Light Theme */
+  --bg-color-light: rgba(255, 255, 255, 0.85);
+  --border-color-light: rgba(0, 0, 0, 0.15);
+  --text-color-light: #333;
+  --text-color-secondary-light: #666;
+  --shadow-light: 0 8px 32px rgba(0, 0, 0, 0.15);
 }
 
 /* --- GENERAL STYLES --- */
 body {
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background-color: transparent;
-    overflow: hidden;
-    perspective: 1000px; /* For 3D flip effect */
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  background-color: transparent;
+  overflow: hidden;
+  perspective: 1000px; /* For 3D flip effect */
 }
 
 .widget-flipper {
-    width: var(--widget-width);
-    height: var(--widget-height);
-    position: relative;
-    transform-style: preserve-3d;
-    transition: transform 0.6s;
+  width: clamp(var(--widget-min-width), 100vw, var(--widget-max-width));
+  height: clamp(var(--widget-min-height), 100vh, var(--widget-max-height));
+  min-width: var(--widget-min-width);
+  min-height: var(--widget-min-height);
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .widget-flipper.is-flipped {
-    transform: rotateY(180deg);
+  transform: rotateY(180deg);
 }
 
-.widget-front, .widget-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden; /* Safari */
+.widget-front,
+.widget-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden; /* Safari */
 }
 
 .widget-back {
-    transform: rotateY(180deg);
+  transform: rotateY(180deg);
 }
 
 /* --- WIDGET CONTAINER --- */
 .widget-container {
-    width: var(--widget-width);
-    height: var(--widget-height);
-    border-radius: 20px;
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    display: flex;
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 20px;
+    padding: clamp(15px, 4vw, 20px);
     box-sizing: border-box;
-    -webkit-app-region: drag;
-    transition: all 0.3s ease;
+    /* -webkit-app-region: drag; */ /* Removed to define a specific drag region instead */
+  transition: all 0.3s ease;
+  position: relative;
 }
 
 /* --- THEMES --- */
 .widget-container.dark-theme {
-    background: var(--bg-color-dark);
-    border: 1px solid var(--border-color-dark);
-    box-shadow: var(--shadow-dark);
-    color: var(--text-color-dark);
+  background: var(--bg-color-dark);
+  border: 1px solid var(--border-color-dark);
+  box-shadow: var(--shadow-dark);
+  color: var(--text-color-dark);
 }
 
 .widget-container.light-theme {
-    background: var(--bg-color-light);
-    border: 1px solid var(--border-color-light);
-    box-shadow: var(--shadow-light);
-    color: var(--text-color-light);
+  background: var(--bg-color-light);
+  border: 1px solid var(--border-color-light);
+  box-shadow: var(--shadow-light);
+  color: var(--text-color-light);
 }
 
 /* --- HEADER --- */
 .widget-header {
-    display: flex;
+  display: flex;
     align-items: center;
     gap: 12px;
     cursor: pointer;
-    -webkit-app-region: no-drag;
+    position: relative; /* Ensure it's layered above the new drag handle */
+    z-index: 1;
+  -webkit-app-region: no-drag;
 }
 
 .wemix-logo {
-    width: 36px;
-    height: 36px;
+  width: 36px;
+  height: 36px;
 }
 
 .header-text h2 {
-    margin: 0;
-    font-size: clamp(16px, 5vw, 20px);
-    font-weight: 600;
+  margin: 0;
+  font-size: clamp(16px, 5vw, 20px);
+  font-weight: 600;
 }
 
 /* --- PRICE & SPARKLINE --- */
 .price-container {
-    text-align: center;
-    margin-top: -10px; /* Adjust spacing */
+  text-align: center;
+  margin-top: -10px; /* Adjust spacing */
 }
 
 .price-container h1 {
-    margin: 0;
-    font-size: clamp(32px, 10vw, 48px);
-    font-weight: 700;
+  margin: 0;
+  font-size: clamp(32px, 10vw, 48px);
+  font-weight: 700;
 }
 
 #sparkline {
-    margin-top: 5px;
+  margin-top: 5px;
+  max-width: 100%;
+  height: auto;
+  border-radius: 4px;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+#sparkline.hidden {
+  opacity: 0;
+  transform: scaleY(0);
+  height: 0;
+  margin: 0;
 }
 
 /* --- DETAILS --- */
 .details-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: clamp(12px, 3vw, 14px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: clamp(12px, 3vw, 14px);
 }
 
 .widget-container.dark-theme .details-container {
-    color: var(--text-color-secondary-dark);
+  color: var(--text-color-secondary-dark);
 }
 
 .widget-container.light-theme .details-container {
-    color: var(--text-color-secondary-light);
+  color: var(--text-color-secondary-light);
 }
 
-#price-change.positive { color: #4caf50; }
-#price-change.negative { color: #f44336; }
-#price-change.neutral { color: #9e9e9e; }
+#price-change.positive {
+  color: #4caf50;
+}
+#price-change.negative {
+  color: #f44336;
+}
+#price-change.neutral {
+  color: #9e9e9e;
+}
 
-/* --- WIDGET CONTROLS --- */
-.widget-controls {
+/* --- SIMPLE CONTROL BUTTONS --- */
+.control-buttons {
+  position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1000;
+    -webkit-app-region: no-drag; /* Explicitly make the control area non-draggable */
+  -webkit-app-region: no-drag;
+}
+
+.control-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: inherit;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+  -webkit-app-region: no-drag;
+}
+
+.control-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.05);
+}
+
+.control-btn:active {
+  transform: scale(0.95);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 4px;
+  min-width: 120px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-5px);
+  transition: all 0.2s ease;
+  z-index: 1001;
+}
+
+.dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.menu-item {
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: left;
+  transition: background 0.2s ease;
+  outline: none;
+  -webkit-app-region: no-drag;
+}
+
+.menu-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.menu-item:active {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Light theme styling */
+.widget-container.light-theme .control-btn {
+  background: rgba(0, 0, 0, 0.1);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+.widget-container.light-theme .control-btn:hover {
+  background: rgba(0, 0, 0, 0.15);
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+.widget-container.light-theme .dropdown-menu {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.widget-container.light-theme .menu-item:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* --- DRAG REGION --- */
+.top-bar-drag-handle {
     position: absolute;
-    bottom: 10px;
-    right: 15px;
-    display: flex;
-    gap: 5px;
-    -webkit-app-region: no-drag;
-}
-
-.widget-btn {
-    background: transparent;
-    border: none;
-    color: inherit; /* Inherits color from theme */
-    font-size: 16px;
-    cursor: pointer;
-    padding: 5px;
-    opacity: 0.7;
-    transition: opacity 0.2s ease;
-}
-
-.widget-btn:hover {
-    opacity: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 58px; /* Covers the top bar area for dragging */
+    -webkit-app-region: drag;
 }
 
 /* --- SETTINGS (BACK) PANEL --- */
 .widget-back .widget-container {
     align-items: center;
+  justify-content: flex-start;
+  padding-top: clamp(20px, 5vw, 25px);
 }
 
 .widget-back h3 {
-    margin-top: 0;
-    margin-bottom: 15px;
-    font-weight: 600;
+  margin-top: 0;
+  margin-bottom: clamp(15px, 4vw, 20px);
+  font-weight: 600;
+  font-size: clamp(18px, 5vw, 22px);
+  text-align: center;
+  width: 100%;
 }
 
 .setting-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin-bottom: 10px;
-    font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: clamp(12px, 3vw, 15px);
+  font-size: clamp(13px, 3.5vw, 14px);
+  padding: 0 5px;
 }
 
 .setting-row label {
-    -webkit-app-region: no-drag;
+  -webkit-app-region: no-drag;
+  font-weight: 500;
+  flex: 1;
 }
 
-.setting-row select, .setting-row input {
-    -webkit-app-region: no-drag;
-    background: rgba(255, 255, 255, 0.1);
-    color: inherit;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 5px;
-    padding: 3px;
+.setting-row select,
+.setting-row input {
+  -webkit-app-region: no-drag;
+  background: rgba(255, 255, 255, 0.15);
+  color: inherit;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 8px;
+  padding: clamp(4px, 1vw, 6px) clamp(6px, 1.5vw, 8px);
+  font-size: clamp(12px, 3vw, 13px);
+  min-width: 80px;
+  transition: all 0.2s ease;
 }
 
-.widget-back.light-theme .setting-row select,
-.widget-back.light-theme .setting-row input {
-    background: rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 0, 0, 0.1);
+.setting-row select:hover,
+.setting-row input:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.setting-row select:focus,
+.setting-row input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Light theme settings styling */
+.widget-container.light-theme .setting-row select,
+.widget-container.light-theme .setting-row input {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.widget-container.light-theme .setting-row select:hover,
+.widget-container.light-theme .setting-row input:hover {
+  background: rgba(0, 0, 0, 0.12);
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+.widget-container.light-theme .setting-row select:focus,
+.widget-container.light-theme .setting-row input:focus {
+  background: rgba(0, 0, 0, 0.15);
+  border-color: rgba(0, 0, 0, 0.35);
 }
 
 .widget-back #back-btn {
-    position: absolute;
-    bottom: 15px;
+  position: absolute;
+  bottom: clamp(15px, 4vw, 20px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: inherit;
+  padding: clamp(8px, 2vw, 10px) clamp(16px, 4vw, 20px);
+  border-radius: 8px;
+  font-size: clamp(13px, 3.5vw, 14px);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-app-region: no-drag;
 }
+
+.widget-back #back-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.widget-container.light-theme #back-btn {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.widget-container.light-theme #back-btn:hover {
+  background: rgba(0, 0, 0, 0.12);
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+/* --- RESPONSIVE DESIGN --- */
+@media (max-width: 300px) {
+  .widget-flipper {
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .widget-container {
+    padding: 12px;
+    border-radius: 15px;
+  }
+
+  .header-text h2 {
+    font-size: 16px;
+  }
+
+  .price-container h1 {
+    font-size: 28px;
+  }
+
+  .details-container {
+    font-size: 11px;
+  }
+
+  .setting-row {
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+
+  .control-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+
+  .dropdown-menu {
+    min-width: 100px;
+  }
+
+  .menu-item {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+}
+
+@media (min-width: 400px) {
+  .widget-flipper {
+    width: var(--widget-max-width);
+  }
+
+  .header-text h2 {
+    font-size: 22px;
+  }
+
+  .price-container h1 {
+    font-size: 52px;
+  }
+
+  .details-container {
+    font-size: 15px;
+  }
+}
+
+/* --- ACCESSIBILITY IMPROVEMENTS --- */
+@media (prefers-reduced-motion: reduce) {
+  .widget-flipper {
+    transition: none;
+  }
+
+  .widget-btn {
+    transition: none;
+  }
+
+  .setting-row select,
+  .setting-row input {
+    transition: none;
+  }
+}
+

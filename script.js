@@ -16,7 +16,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeSelect = document.getElementById('theme-select');
     const currencySelect = document.getElementById('currency-select');
     const refreshSelect = document.getElementById('refresh-select');
+    const showGraphCheck = document.getElementById('show-graph');
     const alwaysOnTopCheck = document.getElementById('always-on-top');
+    
+    // Control Elements
+    const menuBtn = document.getElementById('menu-btn');
+    const dropdownMenu = document.getElementById('dropdown-menu');
+    
 
     // --- STATE ---
     let priceInterval;
@@ -31,6 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- API & DATA ---
     const fetchWemixData = async () => {
         try {
+            // Add subtle loading indication
+            priceElement.style.opacity = '0.6';
+            
             const currency = currentSettings.currency || 'usd';
             const priceResponse = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=wemix-token&vs_currencies=${currency}&include_24hr_change=true`);
             const priceData = await priceResponse.json();
@@ -39,10 +48,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const chartData = await chartResponse.json();
 
             updateUI(priceData['wemix-token'], chartData.prices);
+            
+            // Restore opacity
+            priceElement.style.opacity = '1';
 
         } catch (error) {
             console.error('Error fetching WEMIX data:', error);
             priceElement.textContent = 'Error';
+            priceElement.style.opacity = '1';
         }
     };
 
@@ -71,7 +84,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    const resizeCanvas = () => {
+        const container = document.querySelector('.price-container');
+        const containerWidth = container.offsetWidth - 40; // Account for padding
+        sparklineCanvas.width = Math.max(200, containerWidth);
+        sparklineCanvas.height = 50;
+    };
+
     const drawSparkline = (data) => {
+        // Only draw if graph is enabled
+        if (!currentSettings.showGraph) {
+            return;
+        }
+        
+        resizeCanvas(); // Ensure canvas is properly sized
+        
         const prices = data.map(p => p[1]);
         const max = Math.max(...prices);
         const min = Math.min(...prices);
@@ -102,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
             theme: 'dark',
             currency: 'usd',
             refreshRate: 60000,
+            showGraph: true,
             alwaysOnTop: true
         };
         currentSettings = { ...defaultSettings, ...savedSettings };
@@ -113,9 +141,12 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const applySettings = () => {
-        // Theme
-        document.querySelector('.widget-front .widget-container').className = `widget-container ${currentSettings.theme}-theme`;
-        document.querySelector('.widget-back .widget-container').className = `widget-container ${currentSettings.theme}-theme`;
+        // Theme - Apply to both front and back containers
+        const frontContainer = document.querySelector('.widget-front .widget-container');
+        const backContainer = document.querySelector('.widget-back .widget-container');
+        
+        frontContainer.className = `widget-container ${currentSettings.theme}-theme`;
+        backContainer.className = `widget-container ${currentSettings.theme}-theme`;
         themeSelect.value = currentSettings.theme;
 
         // Currency
@@ -126,12 +157,45 @@ document.addEventListener('DOMContentLoaded', () => {
         if (priceInterval) clearInterval(priceInterval);
         priceInterval = setInterval(fetchWemixData, currentSettings.refreshRate);
 
+        // Show Graph
+        showGraphCheck.checked = currentSettings.showGraph;
+        sparklineCanvas.classList.toggle('hidden', !currentSettings.showGraph);
+        
         // Always on Top
         alwaysOnTopCheck.checked = currentSettings.alwaysOnTop;
         if (window.electron) {
             window.electron.send('set-always-on-top', currentSettings.alwaysOnTop);
         }
     };
+
+    // --- MENU FUNCTIONALITY ---
+    let menuOpen = false;
+    
+    const toggleMenu = () => {
+        menuOpen = !menuOpen;
+        dropdownMenu.classList.toggle('show', menuOpen);
+    };
+    
+    const closeMenu = () => {
+        if (menuOpen) {
+            menuOpen = false;
+            dropdownMenu.classList.remove('show');
+        }
+    };
+    
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.control-buttons')) {
+            closeMenu();
+        }
+    });
+    
+    // Keyboard accessibility
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeMenu();
+        }
+    });
 
     // --- EVENT LISTENERS ---
     headerLink.addEventListener('click', () => {
@@ -140,9 +204,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    closeAppElement.addEventListener('click', () => window.electron.send('close-app'));
-    refreshBtn.addEventListener('click', fetchWemixData);
-    settingsBtn.addEventListener('click', () => flipper.classList.add('is-flipped'));
+    // Menu Controls
+    menuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMenu();
+    });
+    
+    closeAppElement.addEventListener('click', () => {
+        closeMenu();
+        if (window.electron) {
+            window.electron.send('close-app');
+        }
+    });
+    
+    refreshBtn.addEventListener('click', () => {
+        closeMenu();
+        fetchWemixData();
+    });
+    
+    settingsBtn.addEventListener('click', () => {
+        closeMenu();
+        flipper.classList.add('is-flipped');
+    });
+    
     backBtn.addEventListener('click', () => {
         flipper.classList.remove('is-flipped');
         saveSettings();
@@ -156,6 +240,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     currencySelect.addEventListener('change', (e) => {
         currentSettings.currency = e.target.value;
+        // Apply currency change immediately
+        fetchWemixData();
     });
 
     refreshSelect.addEventListener('change', (e) => {
@@ -163,9 +249,31 @@ document.addEventListener('DOMContentLoaded', () => {
         applySettings();
     });
 
+    showGraphCheck.addEventListener('change', (e) => {
+        currentSettings.showGraph = e.target.checked;
+        applySettings();
+    });
+
     alwaysOnTopCheck.addEventListener('change', (e) => {
         currentSettings.alwaysOnTop = e.target.checked;
         applySettings();
+    });
+
+    // --- WINDOW RESIZE HANDLING ---
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            resizeCanvas();
+            // Redraw sparkline if we have data
+            const ctx = sparklineCanvas.getContext('2d');
+            const imageData = ctx.getImageData(0, 0, sparklineCanvas.width, sparklineCanvas.height);
+            const hasContent = imageData.data.some(pixel => pixel !== 0);
+            
+            if (hasContent) {
+                fetchWemixData();
+            }
+        }, 150);
     });
 
     // --- INITIALIZATION ---

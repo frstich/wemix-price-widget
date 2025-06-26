@@ -4,15 +4,19 @@ const path = require('path');
 function createWindow () {
   const mainWindow = new BrowserWindow({
     width: 320,
-    height: 220, // Increased height
+    height: 220,
+    minWidth: 280,
+    minHeight: 200,
+    maxWidth: 400,
+    maxHeight: 300,
     frame: false,
     transparent: true,
     resizable: true,
     alwaysOnTop: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
-      nodeIntegration: false, // Best practice
-      contextIsolation: true, // Best practice
+      nodeIntegration: false,
+      contextIsolation: true,
     }
   });
 
