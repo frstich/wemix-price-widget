@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEMIX Price Widget</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="images/icon-192x192.png">
+</head>
+<body>
+    <div class="widget-flipper">
+        <div class="widget-front">
+            <div class="widget-container">
+                <div class="widget-header" id="header-link">
+                    <img src="https://s2.coinmarketcap.com/static/img/coins/64x64/7548.png" alt="WEMIX Logo" class="wemix-logo">
+                    <div class="header-text">
+                        <h2>WEMIX</h2>
+                    </div>
+                </div>
+                <div class="price-container">
+                    <h1 id="price">$0.00</h1>
+                    <canvas id="sparkline" width="280" height="50"></canvas>
+                </div>
+                <div class="details-container">
+                    <p>24h: <span id="price-change" class="neutral">0.00%</span></p>
+                    <p id="last-updated">Last updated: --:--</p>
+                </div>
+                <div class="widget-controls">
+                    <button class="widget-btn" id="refresh-btn" title="Refresh">🔄</button>
+                    <button class="widget-btn" id="settings-btn" title="Settings">⚙️</button>
+                    <button class="widget-btn" id="close-app" title="Close">❌</button>
+                </div>
+            </div>
+        </div>
+        <div class="widget-back">
+            <div class="widget-container">
+                <h3>Settings</h3>
+                <div class="setting-row">
+                    <label for="theme-select">Theme</label>
+                    <select id="theme-select">
+                        <option value="dark">Dark</option>
+                        <option value="light">Light</option>
+                    </select>
+                </div>
+                <div class="setting-row">
+                    <label for="currency-select">Currency</label>
+                    <select id="currency-select">
+                        <option value="usd">USD</option>
+                        <option value="eur">EUR</option>
+                        <option value="jpy">JPY</option>
+                    </select>
+                </div>
+                <div class="setting-row">
+                    <label for="refresh-select">Refresh Rate</label>
+                    <select id="refresh-select">
+                        <option value="30000">30s</option>
+                        <option value="60000">1m</option>
+                        <option value="300000">5m</option>
+                    </select>
+                </div>
+                <div class="setting-row">
+                    <label for="always-on-top">Always on Top</label>
+                    <input type="checkbox" id="always-on-top" checked>
+                </div>
+                <button class="widget-btn" id="back-btn">Done</button>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

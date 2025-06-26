@@ -1,0 +1,15 @@
+{
+  "name": "wemix-price-widget-electron",
+  "version": "1.0.0",
+  "description": "A WEMIX price widget built with Electron",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^29.0.0"
+  }
+}
