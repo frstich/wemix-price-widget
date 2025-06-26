@@ -235,7 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (window.electron) {
       window.electron.send(
         "open-external-link",
-        "https://coinmarketcap.com/currencies/wemix-token/"
+        "https://coinmarketcap.com/currencies/wemix/"
       );
     }
   });
