@@ -16,7 +16,8 @@
   "author": "frstich",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^29.0.0"
+    "electron": "^29.0.0",
+    "electron-builder": "^26.0.12"
   },
   "build": {
     "appId": "com.frstich.wemixmonitor",
