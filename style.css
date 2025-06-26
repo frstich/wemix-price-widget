@@ -71,7 +71,7 @@ body {
   -webkit-backdrop-filter: blur(15px);
   display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start; /* Use flex-start for a top-down layout */
     padding: clamp(15px, 4vw, 20px);
     box-sizing: border-box;
     /* -webkit-app-region: drag; */ /* Removed to define a specific drag region instead */
@@ -119,7 +119,8 @@ body {
 /* --- PRICE & SPARKLINE --- */
 .price-container {
   text-align: center;
-  margin-top: -10px; /* Adjust spacing */
+    /* Let the layout flow naturally */
+    margin: 5px 0 10px 0;
 }
 
 .price-container h1 {
@@ -149,6 +150,7 @@ body {
   justify-content: space-between;
   align-items: center;
   font-size: clamp(12px, 3vw, 14px);
+    margin-top: auto; /* This is the key: it pushes the details to the bottom */
 }
 
 .widget-container.dark-theme .details-container {
