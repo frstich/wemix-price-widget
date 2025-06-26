@@ -3,6 +3,7 @@
 This project is a widget for displaying Wemix price information. It is built with JavaScript and designed to be embedded or run as a standalone widget.
 
 ## Features
+
 - Displays current Wemix price
 - Easy to integrate
 - Lightweight and customizable
@@ -16,6 +17,7 @@ This project is a widget for displaying Wemix price information. It is built wit
 2. Open `index.html` in your browser to view the widget.
 
 ## Project Structure
+
 - `index.html` - Main HTML file
 - `main.js` - Main JavaScript logic
 - `preload.js` - Preload script (if using Electron)
@@ -24,7 +26,9 @@ This project is a widget for displaying Wemix price information. It is built wit
 - `images/` - Icons and images
 
 ## Contributing
+
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 
 ## License
+
 [MIT](LICENSE)
