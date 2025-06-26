@@ -30,16 +30,13 @@
     "appId": "com.frstich.wemixmonitor",
     "productName": "Wemix Monitor",
     "publish": {
-      "provider": "github",
-      "owner": "frstich",
-      "repo": "wemix-price-widget"
+      "provider": "github"
     },
     "files": [
-      "**/*",
-      "!**/node_modules/*",
-      "!*.map",
-      "!**/dist/*",
-      "!**/release/*"
+      "main.js",
+      "preload.js",
+      "dist/",
+      "package.json"
     ],
     "win": {
       "target": "nsis",
