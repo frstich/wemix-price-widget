@@ -34,22 +34,26 @@ jobs:
         run: npm ci
 
       - name: Build application
+        run: npm run build
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run build -- --publish=never
+          ELECTRON_BUILDER_PUBLISH: never
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Prepare Artifacts for Upload
         run: |
           mkdir artifact
           if [ "${{ runner.os }}" == "Windows" ]; then
-            mv dist/*.exe artifact/
-            mv dist/*.yml artifact/
+            mv dist/*.exe artifact/ 2>/dev/null || true
+            mv dist/*.yml artifact/ 2>/dev/null || true
+            mv dist/*.blockmap artifact/ 2>/dev/null || true
           elif [ "${{ runner.os }}" == "macOS" ]; then
-            mv dist/*.dmg artifact/
-            mv dist/*.yml artifact/
+            mv dist/*.dmg artifact/ 2>/dev/null || true
+            mv dist/*.yml artifact/ 2>/dev/null || true
+            mv dist/*.blockmap artifact/ 2>/dev/null || true
           else
-            mv dist/*.AppImage artifact/
-            mv dist/*.yml artifact/
+            mv dist/*.AppImage artifact/ 2>/dev/null || true
+            mv dist/*.yml artifact/ 2>/dev/null || true
+            mv dist/*.blockmap artifact/ 2>/dev/null || true
           fi
         shell: bash
 
@@ -80,3 +84,4 @@ jobs:
             dist/*.dmg
             dist/*.AppImage
             dist/*.yml
+            dist/*.blockmap
