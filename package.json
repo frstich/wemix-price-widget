@@ -1,11 +1,12 @@
 {
   "name": "wemix-price-widget-electron",
-  "version": "1.1.0",
+  "version": "1.2.4",
   "description": "A WEMIX price widget built with Electron",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "build:ci": "electron-builder --config.publish=null"
   },
   "keywords": [
     "wemix",
@@ -29,9 +30,6 @@
   "build": {
     "appId": "com.frstich.wemixmonitor",
     "productName": "Wemix Monitor",
-    "publish": {
-      "provider": "github"
-    },
     "files": [
       "main.js",
       "preload.js",
