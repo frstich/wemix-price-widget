@@ -34,6 +34,7 @@ jobs:
         run: npm run build
         env:
           ELECTRON_BUILDER_PUBLISH: never
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Prepare Artifacts for Upload
         run: |
