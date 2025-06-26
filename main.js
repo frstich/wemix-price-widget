@@ -12,7 +12,7 @@ function createWindow() {
     minHeight: 200,
     maxWidth: 400,
     maxHeight: 300,
-    icon: path.join(__dirname, "images/wemix-512x512.png"), // Set the app icon
+    icon: path.join(__dirname, "images/wemix-512x512.png"),
     frame: false,
     transparent: true,
     resizable: true,
