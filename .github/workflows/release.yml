@@ -34,21 +34,28 @@ jobs:
         run: npm ci
 
       - name: Build application
-        run: npm run build
+        run: npm run build --publish never
 
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Prepare Artifacts for Upload
+        run: |
+          mkdir artifact
+          if [ "${{ runner.os }}" == "Windows" ]; then
+            mv dist/*.exe artifact/
+            mv dist/*.yml artifact/
+          elif [ "${{ runner.os }}" == "macOS" ]; then
+            mv dist/*.dmg artifact/
+            mv dist/*.yml artifact/
+          else
+            mv dist/*.AppImage artifact/
+            mv dist/*.yml artifact/
+          fi
+        shell: bash
 
-      - name: Upload Artifacts
+      - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-build
-          path: |
-            dist/*.exe
-            dist/*.dmg
-            dist/*.AppImage
-            dist/*.yml
-          if-no-files-found: error
+          path: artifact/
 
   release:
     needs: build
@@ -62,6 +69,8 @@ jobs:
 
       - name: Create Release and Upload Assets
         uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           generate_release_notes: true
           files: |
