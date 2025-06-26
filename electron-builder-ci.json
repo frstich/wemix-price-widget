@@ -1,7 +1,7 @@
 {
   "appId": "com.frstich.wemixmonitor",
   "productName": "Wemix Monitor",
-  "files": ["main.js", "preload.js", "dist/", "package.json"],
+  "files": ["main.js", "preload.js", "index.html", "script.js", "style.css", "manifest.json", "images/", "package.json"],
   "win": {
     "target": "nsis",
     "icon": "images/wemix-512x512.png"
