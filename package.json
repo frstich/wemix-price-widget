@@ -35,13 +35,11 @@
       "repo": "wemix-price-widget"
     },
     "files": [
-      "main.js",
-      "preload.js",
-      "index.html",
-      "style.css",
-      "script.js",
-      "manifest.json",
-      "images/**/*"
+      "**/*",
+      "!**/node_modules/*",
+      "!*.map",
+      "!**/dist/*",
+      "!**/release/*"
     ],
     "win": {
       "target": "nsis",
