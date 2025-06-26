@@ -1,6 +1,6 @@
 {
   "name": "wemix-price-widget-electron",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A WEMIX price widget built with Electron",
   "main": "main.js",
   "scripts": {
@@ -19,9 +19,12 @@
     "type": "git",
     "url": "https://github.com/frstich/wemix-price-widget.git"
   },
+  "dependencies": {
+    "electron-updater": "^6.1.1"
+  },
   "devDependencies": {
-    "electron": "^29.0.0",
-    "electron-builder": "^26.0.12"
+    "electron": "^31.0.1",
+    "electron-builder": "^24.13.3"
   },
   "build": {
     "appId": "com.frstich.wemixmonitor",
@@ -36,9 +39,22 @@
       "preload.js",
       "index.html",
       "style.css",
-      "renderer.js",
-      "node_modules/**/*",
-      "package.json"
-    ]
+      "script.js",
+      "manifest.json",
+      "images/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "images/wemix-512x512.png"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "images/wemix-512x512.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "images/wemix-512x512.png",
+      "category": "Utility"
+    }
   }
 }
