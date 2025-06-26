@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain, shell, Tray, Menu } = require("electron");
 const path = require("path");
+const { autoUpdater } = require("electron-updater");
 
 let mainWindow;
 let tray;
@@ -41,6 +42,8 @@ function createWindow() {
 
 app.whenReady().then(() => {
   createWindow();
+
+  autoUpdater.checkForUpdatesAndNotify();
 
   // Create the tray icon
   tray = new Tray(path.join(__dirname, "images/wemix-192x192.png"));

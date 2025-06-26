@@ -26,6 +26,11 @@
   "build": {
     "appId": "com.frstich.wemixmonitor",
     "productName": "Wemix Monitor",
+    "publish": {
+      "provider": "github",
+      "owner": "frstich",
+      "repo": "wemix-price-widget"
+    },
     "files": [
       "main.js",
       "preload.js",
